@@ -22,6 +22,7 @@ AGremlinsCharacter::AGremlinsCharacter()
 
 	SprintSpeed = MovementComponent->MaxWalkSpeed * 2;
 	WalkSpeed = MovementComponent->MaxWalkSpeed;
+	CrouchSpeed = WalkSpeed / 2;
 
 	CrouchHalfHeight = 24.f;
 
@@ -83,7 +84,7 @@ void AGremlinsCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AGremlinsCharacter::Look);
 
 		// Crouch
-		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Triggered, this, &AGremlinsCharacter::Crouch);
+		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Triggered, this, &AGremlinsCharacter::UserCrouch);
 
 		// Sprint
 		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &AGremlinsCharacter::Sprint);
@@ -121,12 +122,13 @@ void AGremlinsCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
-void AGremlinsCharacter::Crouch(const FInputActionValue& Value)
+void AGremlinsCharacter::UserCrouch(const FInputActionValue& Value)
 {
 	bool bCrouchInput = Value.Get<bool>();
 
 	if (Controller != nullptr)
 	{
+		MovementComponent->MaxWalkSpeed = CrouchSpeed;
 		if (bCrouchInput)
 		{
 			MovementComponent->bWantsToCrouch = true;

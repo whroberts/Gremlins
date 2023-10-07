@@ -65,6 +65,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	float WalkSpeed;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	float CrouchSpeed;
+
 	UPROPERTY();
 	UCharacterMovementComponent* MovementComponent;
 
@@ -79,7 +82,7 @@ protected:
 	void Look(const FInputActionValue& Value);
 
 	/** Called for crouch input */
-	void Crouch(const FInputActionValue& Value);
+	void UserCrouch(const FInputActionValue& Value);
 
 	/** Called for crouch input */
 	void Sprint(const FInputActionValue& Value);
