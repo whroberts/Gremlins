@@ -40,6 +40,12 @@ class AGremlinsCharacter : public ACharacter
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* MoveAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* CrouchAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* SprintAction;
 	
 public:
 	AGremlinsCharacter();
@@ -48,10 +54,16 @@ protected:
 	virtual void BeginPlay();
 
 public:
-		
+
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* LookAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
+	float SprintSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	float WalkSpeed;
 
 	/** Bool for AnimBP to switch to another animation set */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapon)
@@ -65,6 +77,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	bool GetHasRifle();
 
+	UPROPERTY();
+	UCharacterMovementComponent* MovementComponent;
+
+	UPROPERTY(EditAnywhere, Category = PlayerStats, meta = (AllowPrivateAccess = "true"))
+	float CrouchHalfHeight;
+
 protected:
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
@@ -72,10 +90,17 @@ protected:
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
 
+	/** Called for crouch input */
+	void Crouch(const FInputActionValue& Value);
+
+	/** Called for crouch input */
+	void Sprint(const FInputActionValue& Value);
+
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 	// End of APawn interface
+
 
 public:
 	/** Returns Mesh1P subobject **/
