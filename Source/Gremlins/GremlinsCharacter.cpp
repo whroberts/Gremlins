@@ -1,7 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "GremlinsCharacter.h"
-#include "GremlinsProjectile.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -19,9 +18,6 @@ DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 AGremlinsCharacter::AGremlinsCharacter()
 {
-	// Character doesnt have a rifle at start
-	bHasRifle = false;
-
 	MovementComponent = GetCharacterMovement();
 
 	SprintSpeed = MovementComponent->MaxWalkSpeed * 2;
@@ -159,12 +155,3 @@ void AGremlinsCharacter::Sprint(const FInputActionValue& Value)
 	}
 }
 
-void AGremlinsCharacter::SetHasRifle(bool bNewHasRifle)
-{
-	bHasRifle = bNewHasRifle;
-}
-
-bool AGremlinsCharacter::GetHasRifle()
-{
-	return bHasRifle;
-}
