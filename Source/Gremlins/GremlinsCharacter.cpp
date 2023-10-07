@@ -1,7 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "GremlinsCharacter.h"
-#include "GremlinsProjectile.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -10,6 +9,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "Engine/LocalPlayer.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -18,11 +18,16 @@ DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 AGremlinsCharacter::AGremlinsCharacter()
 {
-	// Character doesnt have a rifle at start
-	bHasRifle = false;
-	
+	MovementComponent = GetCharacterMovement();
+
+	SprintSpeed = MovementComponent->MaxWalkSpeed * 2;
+	WalkSpeed = MovementComponent->MaxWalkSpeed;
+	CrouchSpeed = WalkSpeed / 2;
+
+	CrouchHalfHeight = 24.f;
+
 	// Set size for collision capsule
-	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
+	GetCapsuleComponent()->InitCapsuleSize(24.f, 48.f);
 		
 	// Create a CameraComponent	
 	FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
@@ -55,6 +60,10 @@ void AGremlinsCharacter::BeginPlay()
 		}
 	}
 
+	if (MovementComponent != nullptr)
+	{
+		MovementComponent->SetCrouchedHalfHeight(CrouchHalfHeight);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -73,6 +82,12 @@ void AGremlinsCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AGremlinsCharacter::Look);
+
+		// Crouch
+		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Triggered, this, &AGremlinsCharacter::UserCrouch);
+
+		// Sprint
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &AGremlinsCharacter::Sprint);
 	}
 	else
 	{
@@ -107,12 +122,38 @@ void AGremlinsCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
-void AGremlinsCharacter::SetHasRifle(bool bNewHasRifle)
+void AGremlinsCharacter::UserCrouch(const FInputActionValue& Value)
 {
-	bHasRifle = bNewHasRifle;
+	bool bCrouchInput = Value.Get<bool>();
+
+	if (Controller != nullptr)
+	{
+		MovementComponent->MaxWalkSpeed = CrouchSpeed;
+		if (bCrouchInput)
+		{
+			MovementComponent->bWantsToCrouch = true;
+		}
+		else
+		{
+			MovementComponent->bWantsToCrouch = false;
+		}
+	}
 }
 
-bool AGremlinsCharacter::GetHasRifle()
+void AGremlinsCharacter::Sprint(const FInputActionValue& Value)
 {
-	return bHasRifle;
+	bool bSprintInput = Value.Get<bool>();
+
+	if (Controller != nullptr && !MovementComponent->IsCrouching())
+	{
+		if (bSprintInput)
+		{
+			MovementComponent->MaxWalkSpeed = SprintSpeed;
+		}
+		else
+		{
+			MovementComponent->MaxWalkSpeed = WalkSpeed;
+		}
+	}
 }
+
