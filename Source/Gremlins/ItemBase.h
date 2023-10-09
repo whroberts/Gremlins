@@ -18,9 +18,6 @@ class GREMLINS_API AItemBase : public AActor
 
 public:	
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Mesh)
-	UStaticMesh* Mesh;
-
 	UPROPERTY(BlueprintAssignable, Category = Interaction)
 	FPickUp OnPickUp;
 
