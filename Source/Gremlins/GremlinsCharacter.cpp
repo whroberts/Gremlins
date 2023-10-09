@@ -18,6 +18,15 @@ DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 AGremlinsCharacter::AGremlinsCharacter()
 {
+	// Initalizing Null member variables
+	JumpAction = nullptr;
+	MoveAction = nullptr;
+	CrouchAction = nullptr;
+	SprintAction = nullptr;
+	LookAction = nullptr;
+	DefaultMappingContext = nullptr;
+
+	//Get Movement Component and store
 	MovementComponent = GetCharacterMovement();
 
 	SprintSpeed = MovementComponent->MaxWalkSpeed * 2;
@@ -67,6 +76,7 @@ void AGremlinsCharacter::BeginPlay()
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
+#pragma region Input
 
 void AGremlinsCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -88,6 +98,12 @@ void AGremlinsCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 		// Sprint
 		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &AGremlinsCharacter::Sprint);
+
+		// Interact
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &AGremlinsCharacter::Interact);
+
+		// Lean
+		EnhancedInputComponent->BindAction(LeanAction, ETriggerEvent::Triggered, this, &AGremlinsCharacter::Lean);
 	}
 	else
 	{
@@ -157,3 +173,51 @@ void AGremlinsCharacter::Sprint(const FInputActionValue& Value)
 	}
 }
 
+void AGremlinsCharacter::Interact(const FInputActionValue& Value)
+{
+	bool bInteractInput = Value.Get<bool>();
+
+	if (Controller != nullptr)
+	{
+		if (bInteractInput)
+		{
+
+		}
+	}
+}
+
+void AGremlinsCharacter::Lean(const FInputActionValue& Value)
+{
+	float LeanInputValue = Value.Get<float>();
+
+	if (Controller != nullptr)
+	{
+		if (LeanInputValue > 0)
+		{
+			// Lean right
+		}
+		else if (LeanInputValue < 0)
+		{
+			// Lean left
+		}
+		else
+		{
+			// If LeanInputValue = 0
+			// Do nothing
+		}
+	}
+}
+#pragma endregion
+
+
+////// Gameplay
+
+void AGremlinsCharacter::PickupObject()
+{
+	UE_LOG(LogTemp, Log, TEXT("PickedUp Object"));
+
+	// Run Game logic
+	//	Place object on pivot location in camera view
+	//	Place on camera so that the player can see the model
+	//	Make sure object moves when player leans, sprints, crouches
+}

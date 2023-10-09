@@ -46,9 +46,18 @@ class AGremlinsCharacter : public ACharacter
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* SprintAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* InteractAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* LeanAction;
 	
 public:
 	AGremlinsCharacter();
+
+	UFUNCTION()
+	void PickupObject();
 
 protected:
 	virtual void BeginPlay();
@@ -86,6 +95,12 @@ protected:
 
 	/** Called for crouch input */
 	void Sprint(const FInputActionValue& Value);
+
+	/** Called for interaction input */
+	void Interact(const FInputActionValue& Value);
+
+	/** Called for leaning input */
+	void Lean(const FInputActionValue& value);
 
 protected:
 	// APawn interface

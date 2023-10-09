@@ -14,9 +14,9 @@ AItemBase::AItemBase()
 
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	StaticMesh->SetupAttachment(RootComponent);
-	StaticMesh->SetStaticMesh(Mesh);
 	StaticMesh->SetRelativeLocation(FVector(0.f, 0.f, 0.f));
 	StaticMesh->SetWorldScale3D(FVector(1.f));
+	StaticMesh->SetCollisionProfileName(TEXT("NoCollision"));
 }
 
 // Called when the game starts or when spawned
@@ -40,6 +40,8 @@ void AItemBase::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, A
 
 		// Unregister from the Overlap Event so it is no longer triggered
 		OverlapSphere->OnComponentBeginOverlap.RemoveAll(this);
+
+		Character->PickupObject();
 	}
 }
 
