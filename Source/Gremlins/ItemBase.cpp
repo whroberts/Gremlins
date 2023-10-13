@@ -3,13 +3,14 @@
 
 #include "ItemBase.h"
 #include "GremlinsCharacter.h"
+#include "GremlinsPlayerController.h"
 
 // Sets default values
 AItemBase::AItemBase()
 {
 	OverlapSphere = CreateDefaultSubobject<USphereComponent>(TEXT("OverlapSphere"));
 	RootComponent = OverlapSphere;
-	OverlapSphere->InitSphereRadius(40.0f);
+	OverlapSphere->InitSphereRadius(100.0f);
 	OverlapSphere->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
@@ -39,9 +40,20 @@ void AItemBase::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, A
 		OnPickUp.Broadcast(Character);
 
 		// Unregister from the Overlap Event so it is no longer triggered
-		OverlapSphere->OnComponentBeginOverlap.RemoveAll(this);
+		//OverlapSphere->OnComponentBeginOverlap.RemoveAll(this);
 
-		Character->PickupObject();
+		// Display widget for pickup
 	}
+}
+
+AGremlinsPlayerController* AItemBase::ConvertOverlapToPlayer(AActor* OtherActor)
+{
+	AGremlinsCharacter* Character = Cast<AGremlinsCharacter>(OtherActor);
+	if (Character != nullptr)
+	{
+		return Cast<AGremlinsPlayerController>(Character->Controller);
+		//Character->PickupObject();
+	}
+	return nullptr;
 }
 
