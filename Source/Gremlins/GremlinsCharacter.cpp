@@ -144,13 +144,14 @@ void AGremlinsCharacter::UserCrouch(const FInputActionValue& Value)
 
 	if (Controller != nullptr)
 	{
-		MovementComponent->MaxWalkSpeed = CrouchSpeed;
 		if (bCrouchInput)
 		{
+			MovementComponent->MaxWalkSpeed = CrouchSpeed;
 			MovementComponent->bWantsToCrouch = true;
 		}
 		else
 		{
+			MovementComponent->MaxWalkSpeed = WalkSpeed;
 			MovementComponent->bWantsToCrouch = false;
 		}
 	}
