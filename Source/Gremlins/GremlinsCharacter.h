@@ -77,7 +77,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	float CrouchSpeed;
 
-	UPROPERTY();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite);
 	UCharacterMovementComponent* MovementComponent;
 
 	UPROPERTY(EditAnywhere, Category = PlayerStats, meta = (AllowPrivateAccess = "true"))
